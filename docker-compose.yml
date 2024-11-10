@@ -5,5 +5,3 @@ services:
     build: .
     ports:
       - "7000:8080"
-    volumes:
-      - ./script.sh:/app/script.sh
