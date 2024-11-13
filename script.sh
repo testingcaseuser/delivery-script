@@ -213,3 +213,27 @@ if [ "$SSH_PERMIT_ROOT_LOGIN" = "yes" ] || [ "$SSH_PERMIT_ROOT_LOGIN" = "without
 else
     echo " - SSH PermitRootLogin is disabled."
 fi
+
+echo -e "8. Checking for SSH key for localhost access."
+if [ ! -f ~/.ssh/authorized_keys ]; then
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    touch ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+fi
+
+set +e
+IS_DELIVERY_VOLUME_EXISTS=$(docker volume ls | grep delivery-db | wc -l)
+set -e
+
+if [ "$IS_DELIVERY_VOLUME_EXISTS" -eq 0 ]; then
+    echo " - Generating SSH key."
+    ssh-keygen -t ed25519 -a 100 -f /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal -q -N "" -C delivery
+    chown 9999 /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal
+    sed -i "/delivery/d" ~/.ssh/authorized_keys
+    cat /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal.pub >> ~/.ssh/authorized_keys
+    rm -f /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal.pub
+fi
+
+chown -R 9999:root /data/delivery
+chmod -R 700 /data/delivery
