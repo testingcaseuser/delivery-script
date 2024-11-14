@@ -17,7 +17,7 @@ mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services,prox
 mkdir -p /data/delivery/ssh/{keys,mux}
 mkdir -p /data/delivery/proxy/dynamic
 
-chown -R 9999:root /data/delivery
+chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
 
 INSTALLATION_LOG_WITH_DATE="/data/delivery/source/installation-${DATE}.log"
@@ -229,11 +229,11 @@ set -e
 if [ "$IS_DELIVERY_VOLUME_EXISTS" -eq 0 ]; then
     echo " - Generating SSH key."
     ssh-keygen -t ed25519 -a 100 -f /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal -q -N "" -C delivery
-    chown 9999 /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal
+    chown 1001 /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal
     sed -i "/delivery/d" ~/.ssh/authorized_keys
     cat /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal.pub >> ~/.ssh/authorized_keys
     rm -f /data/delivery/ssh/keys/id.$CURRENT_USER@host.docker.internal.pub
 fi
 
-chown -R 9999:root /data/delivery
+chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
