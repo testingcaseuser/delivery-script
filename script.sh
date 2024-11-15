@@ -237,3 +237,7 @@ fi
 
 chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
+
+echo -e "3. Installing image builder."
+
+curl -sSL https://nixpacks.com/install.sh | bash
