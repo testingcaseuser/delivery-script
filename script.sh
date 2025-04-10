@@ -309,6 +309,9 @@ else
     echo " - Docker is installed."
 fi
 
+echo -e "5. Download required files from CDN. "
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
+
 echo -e "8. Checking for SSH key for localhost access."
 if [ ! -f ~/.ssh/authorized_keys ]; then
     mkdir -p ~/.ssh
