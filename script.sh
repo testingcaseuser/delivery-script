@@ -5,12 +5,10 @@ set -e # Exit immediately if a command exits with a non-zero status
 ## $1 could be empty, so we need to disable this check
 #set -u # Treat unset variables as an error and exit
 set -o pipefail # Cause a pipeline to return the status of the last command that exited with a non-zero status
-CDN="https://cdn.coollabs.io/coolify"
 DATE=$(date +"%Y%m%d-%H%M%S")
 
 VERSION="1.6"
-DOCKER_VERSION="26.0"
-# TODO: Ask for a user
+DOCKER_VERSION="27.0.3"
 CURRENT_USER=$USER
 
 mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services,proxy,webhooks-during-maintenance,sentinel}
