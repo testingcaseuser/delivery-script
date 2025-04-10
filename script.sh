@@ -214,6 +214,103 @@ else
     echo " - SSH PermitRootLogin is disabled."
 fi
 
+# Detect if docker is installed via snap
+if [ -x "$(command -v snap)" ]; then
+    SNAP_DOCKER_INSTALLED=$(snap list docker >/dev/null 2>&1 && echo "true" || echo "false")
+    if [ "$SNAP_DOCKER_INSTALLED" = "true" ]; then
+        echo " - Docker is installed via snap."
+        echo "   Please note that Delivery does not support Docker installed via snap."
+        echo "   Please remove Docker with snap (snap remove docker) and reexecute this script."
+        exit 1
+    fi
+fi
+
+echo -e "3. Check Docker Installation. "
+if ! [ -x "$(command -v docker)" ]; then
+    echo " - Docker is not installed. Installing Docker. It may take a while."
+    getAJoke
+    case "$OS_TYPE" in
+        "almalinux")
+            dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo >/dev/null 2>&1
+            dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Docker could not be installed automatically. Please visit https://docs.docker.com/engine/install/ and install Docker manually to continue."
+                exit 1
+            fi
+            systemctl start docker >/dev/null 2>&1
+            systemctl enable docker >/dev/null 2>&1
+            ;;
+        "alpine")
+            apk add docker docker-cli-compose >/dev/null 2>&1
+            rc-update add docker default >/dev/null 2>&1
+            service docker start >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Failed to install Docker with apk. Try to install it manually."
+                echo "   Please visit https://wiki.alpinelinux.org/wiki/Docker for more information."
+                exit 1
+            fi
+            ;;
+        "arch")
+            pacman -Sy docker docker-compose --noconfirm >/dev/null 2>&1
+            systemctl enable docker.service >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Failed to install Docker with pacman. Try to install it manually."
+                echo "   Please visit https://wiki.archlinux.org/title/docker for more information."
+                exit 1
+            fi
+            ;;
+        "amzn")
+            dnf install docker -y >/dev/null 2>&1
+            DOCKER_CONFIG=${DOCKER_CONFIG:-/usr/local/lib/docker}
+            mkdir -p $DOCKER_CONFIG/cli-plugins >/dev/null 2>&1
+            curl -sL https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o $DOCKER_CONFIG/cli-plugins/docker-compose >/dev/null 2>&1
+            chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose >/dev/null 2>&1
+            systemctl start docker >/dev/null 2>&1
+            systemctl enable docker >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Failed to install Docker with dnf. Try to install it manually."
+                echo "   Please visit https://www.cyberciti.biz/faq/how-to-install-docker-on-amazon-linux-2/ for more information."
+                exit 1
+            fi
+            ;;
+        "fedora")
+            if [ -x "$(command -v dnf5)" ]; then
+                # dnf5 is available
+                dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo --overwrite >/dev/null 2>&1
+            else
+                # dnf5 is not available, use dnf
+                dnf config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo >/dev/null 2>&1
+            fi
+            dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Docker could not be installed automatically. Please visit https://docs.docker.com/engine/install/ and install Docker manually to continue."
+                exit 1
+            fi
+            systemctl start docker >/dev/null 2>&1
+            systemctl enable docker >/dev/null 2>&1
+            ;;
+        *)
+            if [ "$OS_TYPE" = "ubuntu" ] && [ "$OS_VERSION" = "24.10" ]; then
+                echo "Docker automated installation is not supported on Ubuntu 24.10 (non-LTS release)."
+                    echo "Please install Docker manually."
+                exit 1
+            fi
+            curl -s https://releases.rancher.com/install-docker/${DOCKER_VERSION}.sh | sh 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                curl -s https://get.docker.com | sh -s -- --version ${DOCKER_VERSION} 2>&1
+                if ! [ -x "$(command -v docker)" ]; then
+                    echo " - Docker installation failed."
+                    echo "   Maybe your OS is not supported?"
+                    echo " - Please visit https://docs.docker.com/engine/install/ and install Docker manually to continue."
+                    exit 1
+                fi
+            fi
+    esac
+    echo " - Docker installed successfully."
+else
+    echo " - Docker is installed."
+fi
+
 echo -e "8. Checking for SSH key for localhost access."
 if [ ! -f ~/.ssh/authorized_keys ]; then
     mkdir -p ~/.ssh
