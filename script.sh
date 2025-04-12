@@ -11,6 +11,41 @@ VERSION="1.6"
 DOCKER_VERSION="27.0.3"
 CURRENT_USER=$USER
 
+TOTAL_SPACE=$(df -BG / | awk 'NR==2 {print $2}' | sed 's/G//')
+AVAILABLE_SPACE=$(df -BG / | awk 'NR==2 {print $4}' | sed 's/G//')
+REQUIRED_TOTAL_SPACE=30
+REQUIRED_AVAILABLE_SPACE=20
+WARNING_SPACE=false
+
+if [ "$TOTAL_SPACE" -lt "$REQUIRED_TOTAL_SPACE" ]; then
+    WARNING_SPACE=true
+    cat << EOF
+WARNING: Insufficient total disk space!
+
+Total disk space:     ${TOTAL_SPACE}GB
+Required disk space:  ${REQUIRED_TOTAL_SPACE}GB
+
+==================
+EOF
+fi
+
+if [ "$AVAILABLE_SPACE" -lt "$REQUIRED_AVAILABLE_SPACE" ]; then
+    cat << EOF
+WARNING: Insufficient available disk space!
+
+Available disk space:   ${AVAILABLE_SPACE}GB
+Required available space: ${REQUIRED_AVAILABLE_SPACE}GB
+
+==================
+EOF
+WARNING_SPACE=true
+fi
+
+if [ "$WARNING_SPACE" = true ]; then
+    echo "Sleeping for 5 seconds."
+    sleep 5
+fi
+
 mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services,proxy,webhooks-during-maintenance,sentinel}
 mkdir -p /data/delivery/ssh/{keys,mux}
 mkdir -p /data/delivery/proxy/dynamic
