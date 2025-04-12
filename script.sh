@@ -17,6 +17,11 @@ REQUIRED_TOTAL_SPACE=30
 REQUIRED_AVAILABLE_SPACE=20
 WARNING_SPACE=false
 
+set +e
+DEFAULT_PRIVATE_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+PRIVATE_IPS=$(hostname -I)
+set -e
+
 if [ "$TOTAL_SPACE" -lt "$REQUIRED_TOTAL_SPACE" ]; then
     WARNING_SPACE=true
     cat << EOF
@@ -346,6 +351,46 @@ fi
 
 echo -e "5. Download required files from CDN. "
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
+
+echo -e "6. Make backup of .env to .env-$DATE"
+
+# Copy .env.example if .env does not exist
+if [ -f $ENV_FILE ]; then
+    cp $ENV_FILE $ENV_FILE-$DATE
+else
+    echo " - File does not exist: $ENV_FILE"
+    echo " - Copying .env.production to .env-$DATE"
+    cp /data/delivery/source/.env.production $ENV_FILE-$DATE
+
+    # Generate a secure Postgres DB password
+    DB_PASSWORD=$(openssl rand -base64 32)
+    
+    sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE-$DATE"
+    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://postgres:$DB_PASSWORD@db:5432/postgres|" "$ENV_FILE-$DATE"
+
+    # Generate secure Minio credentials
+    sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
+    sed -i "s|^MINIO_SERVER_SECRET_KEY=.*|MINIO_SERVER_SECRET_KEY=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
+    sed -i "s|^MINIO_SERVER_ACCESS_KEY=.*|MINIO_SERVER_ACCESS_KEY=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
+
+    # Set the default host for ssh
+    sed -i "s|^SSH_HOST=.*|SSH_HOST=$DEFAULT_PRIVATE_IP|" "$ENV_FILE-$DATE"
+
+    # Generate bearer token for rest API
+    BEARER_TOKEN=$(openssl rand -hex 16)
+
+    sed -i "s|^BEARER_TOKEN=.*|BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
+    sed -i "s|^JOBS_BEARER_TOKEN=.*|JOBS_BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
+
+    # Generate a secure authentication token (will be used to generate a JWT token)
+    AUTH_SECRET=$(openssl rand -hex 32)
+
+    sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
+fi
+
+# Merge .env and .env.production. New values will be added to .env
+echo -e "7. Propagating .env with new values - if necessary."
+awk -F '=' '!seen[$1]++' "$ENV_FILE-$DATE" /data/delivery/source/.env.production > $ENV_FILE
 
 echo -e "8. Checking for SSH key for localhost access."
 if [ ! -f ~/.ssh/authorized_keys ]; then
