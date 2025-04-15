@@ -351,6 +351,7 @@ fi
 
 echo -e "5. Download required files from CDN. "
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
@@ -416,6 +417,23 @@ fi
 chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
 
-echo -e "3. Installing image builder."
+echo -e "9. Installing image builder."
 
 curl -sSL https://nixpacks.com/install.sh | bash
+
+echo -e "10. Installing Docker Compose."
+
+docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/compose.prod.yaml up -d --remove-orphans --force-recreate --wait --wait-timeout 60
+
+echo -e "11. Enabling Docker Swarm mode."
+
+docker swarm init
+
+echo -e "\033[0;35m
+   ____                            _         _       _   _                 _
+  / ___|___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_(_) ___  _ __  ___| |
+ | |   / _ \| '_ \ / _\` | '__/ _\` | __| | | | |/ _\` | __| |/ _ \| '_ \/ __| |
+ | |__| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | \__ \_|
+  \____\___/|_| |_|\__, |_|  \__,_|\__|\__,_|_|\__,_|\__|_|\___/|_| |_|___(_)
+                   |___/
+\033[0m"
