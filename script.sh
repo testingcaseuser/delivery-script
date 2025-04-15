@@ -421,7 +421,7 @@ echo -e "9. Installing image builder."
 
 curl -sSL https://nixpacks.com/install.sh | bash
 
-echo -e "10. Installing Docker Compose."
+echo -e "10. Starting delivery Docker containers."
 
 docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/compose.prod.yaml up -d --remove-orphans --force-recreate --wait --wait-timeout 60
 
