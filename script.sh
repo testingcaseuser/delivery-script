@@ -362,38 +362,38 @@ if [ -f $ENV_FILE ]; then
     cp $ENV_FILE $ENV_FILE-$DATE
 else
     echo " - File does not exist: $ENV_FILE"
-    echo " - Copying .env.production to .env-$DATE"
-    cp /data/delivery/source/.env.production $ENV_FILE-$DATE
+    echo " - Copying .env.production to .env"
+    cp /data/delivery/source/.env.production $ENV_FILE
 
     # Generate a secure Postgres DB password
     DB_PASSWORD=$(openssl rand -base64 32)
     
-    sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE-$DATE"
-    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://postgres:$DB_PASSWORD@db:5432/postgres|" "$ENV_FILE-$DATE"
+    sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE"
+    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://postgres:$DB_PASSWORD@db:5432/postgres|" "$ENV_FILE"
 
     # Generate secure Minio credentials
-    sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
-    sed -i "s|^MINIO_SERVER_SECRET_KEY=.*|MINIO_SERVER_SECRET_KEY=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
-    sed -i "s|^MINIO_SERVER_ACCESS_KEY=.*|MINIO_SERVER_ACCESS_KEY=$(openssl rand -hex 32)|" "$ENV_FILE-$DATE"
+    sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=$(openssl rand -hex 32)|" "$ENV_FILE"
+    sed -i "s|^MINIO_SERVER_SECRET_KEY=.*|MINIO_SERVER_SECRET_KEY=$(openssl rand -hex 32)|" "$ENV_FILE"
+    sed -i "s|^MINIO_SERVER_ACCESS_KEY=.*|MINIO_SERVER_ACCESS_KEY=$(openssl rand -hex 32)|" "$ENV_FILE"
 
     # Set the default host for ssh
-    sed -i "s|^SSH_HOST=.*|SSH_HOST=$DEFAULT_PRIVATE_IP|" "$ENV_FILE-$DATE"
+    sed -i "s|^SSH_HOST=.*|SSH_HOST=$DEFAULT_PRIVATE_IP|" "$ENV_FILE"
 
     # Generate bearer token for rest API
     BEARER_TOKEN=$(openssl rand -hex 16)
 
-    sed -i "s|^BEARER_TOKEN=.*|BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
-    sed -i "s|^JOBS_BEARER_TOKEN=.*|JOBS_BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
+    sed -i "s|^BEARER_TOKEN=.*|BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE"
+    sed -i "s|^JOBS_BEARER_TOKEN=.*|JOBS_BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE"
 
     # Generate a secure authentication token (will be used to generate a JWT token)
     AUTH_SECRET=$(openssl rand -hex 32)
 
-    sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$AUTH_SECRET|" "$ENV_FILE-$DATE"
+    sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$AUTH_SECRET|" "$ENV_FILE"
 
     # Set the latest docker tag of delivery source
     DOCKER_TAGS=$DELIVERY_SOURCE_TAG-latest
 
-    sed -i "s|^DOCKER_TAGS=.*|DOCKER_TAGS=$DOCKER_TAGS|" "$ENV_FILE-$DATE"
+    sed -i "s|^DOCKER_TAGS=.*|DOCKER_TAGS=$DOCKER_TAGS|" "$ENV_FILE"
 
 fi
 
