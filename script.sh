@@ -17,6 +17,9 @@ REQUIRED_TOTAL_SPACE=30
 REQUIRED_AVAILABLE_SPACE=20
 WARNING_SPACE=false
 
+RELEASE=$(curl --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/younes101020/delivery/releases/latest")
+DELIVERY_SOURCE_TAG=$(echo "$RELEASE" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+
 set +e
 DEFAULT_PRIVATE_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 PRIVATE_IPS=$(hostname -I)
@@ -385,7 +388,13 @@ else
     # Generate a secure authentication token (will be used to generate a JWT token)
     AUTH_SECRET=$(openssl rand -hex 32)
 
-    sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$BEARER_TOKEN|" "$ENV_FILE-$DATE"
+    sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$AUTH_SECRET|" "$ENV_FILE-$DATE"
+
+    # Set the latest docker tag of delivery source
+    DOCKER_TAGS=$DELIVERY_SOURCE_TAG-latest
+
+    sed -i "s|^DOCKER_TAGS=.*|DOCKER_TAGS=$DOCKER_TAGS|" "$ENV_FILE-$DATE"
+
 fi
 
 # Merge .env and .env.production. New values will be added to .env
