@@ -18,7 +18,7 @@ REQUIRED_AVAILABLE_SPACE=20
 WARNING_SPACE=false
 
 RELEASE=$(curl --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/younes101020/delivery/releases/latest")
-DELIVERY_SOURCE_TAG=$(echo "$RELEASE" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+DELIVERY_SOURCE_TAG=$(echo "$RELEASE" | grep '"tag_name":' | sed -E 's/.*"v?([^"]+)".*/\1/')
 
 set +e
 DEFAULT_PRIVATE_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
