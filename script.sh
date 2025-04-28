@@ -121,7 +121,7 @@ if [ "$1" != "" ]; then
     LATEST_VERSION="${LATEST_VERSION#v}"
 fi
 
-echo -e "\033[0;35m"
+echo -e "\033[0;33m"
 cat << "EOF"
 ____       _ _                     
 |  _ \  ___| (_)_   _____ _ __ _   _
@@ -266,7 +266,6 @@ fi
 echo -e "3. Check Docker Installation. "
 if ! [ -x "$(command -v docker)" ]; then
     echo " - Docker is not installed. Installing Docker. It may take a while."
-    getAJoke
     case "$OS_TYPE" in
         "almalinux")
             dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo >/dev/null 2>&1
