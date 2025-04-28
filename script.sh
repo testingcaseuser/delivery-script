@@ -385,6 +385,9 @@ else
     sed -i "s|^BEARER_TOKEN=.*|BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE"
     sed -i "s|^JOBS_BEARER_TOKEN=.*|JOBS_BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE"
 
+    # Set the public url of web service
+    sed -i "s|^NEXT_PUBLIC_BASEURL=.*|NEXT_PUBLIC_BASEURL=http://$DEFAULT_PRIVATE_IP:3000|" "$ENV_FILE"
+
     # Generate a secure authentication token (will be used to generate a JWT token)
     AUTH_SECRET=$(openssl rand -hex 32)
 
@@ -431,7 +434,7 @@ docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/co
 
 echo -e "11. Enabling Docker Swarm mode."
 
-docker swarm init
+docker swarm init >/dev/null 2>&1
 
 echo -e "\033[0;33m
    ____                            _         _       _   _                 _
