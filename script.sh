@@ -397,10 +397,6 @@ else
 
 fi
 
-# Merge .env and .env.production. New values will be added to .env
-echo -e "7. Propagating .env with new values - if necessary."
-awk -F '=' '!seen[$1]++' "$ENV_FILE-$DATE" /data/delivery/source/.env.production > $ENV_FILE
-
 echo -e "8. Checking for SSH key for localhost access."
 if [ ! -f ~/.ssh/authorized_keys ]; then
     mkdir -p ~/.ssh
