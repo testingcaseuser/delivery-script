@@ -55,6 +55,7 @@ if [ "$WARNING_SPACE" = true ]; then
 fi
 
 mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services,proxy,webhooks-during-maintenance,sentinel}
+mkdir -p /data/delivery/source/scripts
 mkdir -p /data/delivery/ssh/{keys,mux}
 mkdir -p /data/delivery/proxy/dynamic
 
