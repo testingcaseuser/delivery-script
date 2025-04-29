@@ -358,6 +358,7 @@ curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/ma
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
 chmod 644 /data/delivery/source/scripts/init.sql
+chmod +x /data/delivery/source/scripts/init.sql
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
