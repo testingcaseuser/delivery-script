@@ -353,7 +353,7 @@ fi
 
 echo -e "5. Download required files from CDN. "
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
-curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/scripts -o /data/delivery/source/scripts
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/scripts/init.sql -o /data/delivery/source/scripts/init.sql
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
 echo -e "6. Make backup of .env to .env-$DATE"
