@@ -370,7 +370,7 @@ else
     cp /data/delivery/source/.env.production $ENV_FILE
 
     # Generate a secure Postgres DB password
-    DB_PASSWORD=$(openssl rand -base64 32)
+    DB_PASSWORD=$(openssl rand -base64 12)
     
     sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE"
     sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://postgres:$DB_PASSWORD@db:5432/postgres|" "$ENV_FILE"
