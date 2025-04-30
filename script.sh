@@ -54,10 +54,9 @@ if [ "$WARNING_SPACE" = true ]; then
     sleep 5
 fi
 
-mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services,proxy,webhooks-during-maintenance,sentinel}
-mkdir -p /data/delivery/source/scripts
+mkdir -p /data/delivery/{source,ssh,applications,databases,backups,services}
+mkdir -p /data/delivery/source/infrastructure/{database,traefik-config}
 mkdir -p /data/delivery/ssh/{keys,mux}
-mkdir -p /data/delivery/proxy/dynamic
 
 chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
@@ -354,13 +353,18 @@ fi
 
 echo -e "5. Download required files from CDN. "
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
-curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure -o /data/delivery/source/infrastructure
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/database/init.sql -o /data/delivery/source/infrastructure/database/init.sql
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/traefik-config/acme.json -o /data/delivery/source/infrastructure/traefik-config/acme.json
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/traefik-config/dynamic.yaml -o /data/delivery/source/infrastructure/traefik-config/dynamic.yaml
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/traefik-config/traefik.yaml -o /data/delivery/source/infrastructure/traefik-config/traefik.yaml
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/scripts/init.sql -o /data/delivery/source/scripts/init.sql
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
+
+
 chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
-chmod 644 /data/delivery/source/scripts/init.sql
-chmod +x /data/delivery/source/scripts/init.sql
+chmod 644 /data/delivery/source/infrastructure/database/init.sql
+chmod +x /data/delivery/source/infrastructure/database/init.sql
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
