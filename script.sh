@@ -354,9 +354,11 @@ fi
 
 echo -e "5. Download required files from CDN. "
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/compose.prod.yaml -o /data/delivery/source/compose.prod.yaml
+curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure -o /data/delivery/source/infrastructure
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/scripts/init.sql -o /data/delivery/source/scripts/init.sql
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
+chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
 chmod 644 /data/delivery/source/scripts/init.sql
 chmod +x /data/delivery/source/scripts/init.sql
 
