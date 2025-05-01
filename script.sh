@@ -359,9 +359,7 @@ curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/ma
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/traefik-config/traefik.yaml -o /data/delivery/source/infrastructure/traefik-config/traefik.yaml
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
-
 chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
-chmod 777 /data/delivery/source/infrastructure/database/init.sql
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
@@ -431,6 +429,8 @@ fi
 
 chown -R 1001:root /data/delivery
 chmod -R 700 /data/delivery
+
+chmod -R 755 /data/delivery/source/infrastructure/database
 
 echo -e "9. Installing image builder."
 
