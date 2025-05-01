@@ -361,7 +361,7 @@ curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/ma
 
 
 chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
-chmod 644 /data/delivery/source/infrastructure/database/init.sql
+chmod 777 /data/delivery/source/infrastructure/database/init.sql
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
