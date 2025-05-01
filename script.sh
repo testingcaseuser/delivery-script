@@ -360,9 +360,8 @@ curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/ma
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
 
-
 chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
-chown -R postgres:postgres /data/delivery/source/infrastructure/database
+chmod 644 /data/delivery/source/infrastructure/database/init.sql
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
