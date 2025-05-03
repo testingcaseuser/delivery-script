@@ -385,6 +385,9 @@ else
     # Set the default host for ssh
     sed -i "s|^SSH_HOST=.*|SSH_HOST=$DEFAULT_PRIVATE_IP|" "$ENV_FILE"
 
+    # Set the host public ip
+    sed -i "s|^PUBLIC_IP=.*|PUBLIC_IP=$DEFAULT_PRIVATE_IP|" "$ENV_FILE"
+
     # Generate bearer token for rest API
     BEARER_TOKEN=$(openssl rand -hex 16)
 
