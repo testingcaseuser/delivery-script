@@ -436,13 +436,13 @@ echo -e "9. Installing image builder."
 
 curl -sSL https://nixpacks.com/install.sh | bash >/dev/null 2>&1
 
-echo -e "10. Starting delivery Docker containers."
-
-docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/compose.prod.yaml up -d --remove-orphans --force-recreate --wait --wait-timeout 60 >/dev/null 2>&1
-
-echo -e "11. Enabling Docker Swarm mode."
+echo -e "10. Enabling Docker Swarm mode."
 
 docker swarm init >/dev/null 2>&1
+
+echo -e "11. Starting delivery Docker containers."
+
+docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/compose.prod.yaml up -d --remove-orphans --force-recreate --wait --wait-timeout 60 >/dev/null 2>&1
 
 echo -e "\033[0;33m
    ____                            _         _       _   _                 _
