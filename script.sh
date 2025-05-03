@@ -392,7 +392,7 @@ else
     sed -i "s|^JOBS_BEARER_TOKEN=.*|JOBS_BEARER_TOKEN=$BEARER_TOKEN|" "$ENV_FILE"
 
     # Set the public url of web service
-    sed -i "s|^NEXT_PUBLIC_BASEURL=.*|NEXT_PUBLIC_BASEURL=http://$DEFAULT_PRIVATE_IP:3000|" "$ENV_FILE"
+    sed -i "s|^BASE_URL=.*|BASE_URL=http://$DEFAULT_PRIVATE_IP:3000|" "$ENV_FILE"
 
     # Generate a secure authentication token (will be used to generate a JWT token)
     AUTH_SECRET=$(openssl rand -hex 32)
