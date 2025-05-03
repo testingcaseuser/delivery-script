@@ -178,7 +178,7 @@ esac
 RELEASE=$(curl --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/younes101020/delivery/releases/latest")
 DELIVERY_SOURCE_TAG=$(echo "$RELEASE" | grep '"tag_name":' | sed -E 's/.*"v?([^"]+)".*/\1/')
 
-PUBLIC_IP=$(curl -s https://api.ipify.org)
+PUBLIC_IP=$(curl -s https://api.ipify.org | tr "." "-")
 
 echo -e "2. Check OpenSSH server configuration. "
 
