@@ -408,6 +408,11 @@ else
 
     sed -i "s|^DOCKER_TAGS=.*|DOCKER_TAGS=$DOCKER_TAGS|" "$ENV_FILE"
 
+    # Generate a secure Redis password
+    REDIS_PASSWORD=$(openssl rand -base64 12 | tr -dc "A-Za-z0-9")
+    
+    sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=$REDIS_PASSWORD|" "$ENV_FILE"
+
 fi
 
 echo -e "8. Checking for SSH key for localhost access."
