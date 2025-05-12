@@ -448,6 +448,7 @@ curl -sSL https://nixpacks.com/install.sh | bash >/dev/null 2>&1
 echo -e "10. Enabling Docker Swarm mode."
 
 docker swarm init >/dev/null 2>&1
+groupmod -g 1001 docker >/dev/null 2>&1
 
 echo -e "11. Starting delivery Docker containers."
 
