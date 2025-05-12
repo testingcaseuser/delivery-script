@@ -413,6 +413,10 @@ else
     
     sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=$REDIS_PASSWORD|" "$ENV_FILE"
 
+    # Set the docker group id env var
+    DOCKER_GID=$(grep "^docker:" /etc/group | cut -d: -f3)
+
+    sed -i "s|^DOCKER_GID=.*|DOCKER_GID=$DOCKER_GID|" "$ENV_FILE"
 fi
 
 echo -e "8. Checking for SSH key for localhost access."
@@ -448,7 +452,6 @@ curl -sSL https://nixpacks.com/install.sh | bash >/dev/null 2>&1
 echo -e "10. Enabling Docker Swarm mode."
 
 docker swarm init >/dev/null 2>&1
-groupmod -g 1001 docker >/dev/null 2>&1
 
 echo -e "11. Starting delivery Docker containers."
 
