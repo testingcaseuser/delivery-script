@@ -376,7 +376,7 @@ else
     DB_PASSWORD=$(openssl rand -base64 12 | tr -dc "A-Za-z0-9")
     
     sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE"
-    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://postgres:$DB_PASSWORD@db:5432/postgres|" "$ENV_FILE"
+    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://productiondb:$DB_PASSWORD@database:5432/productiondb|" "$ENV_FILE"
 
     # Generate secure Minio credentials
     sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=$(openssl rand -hex 32)|" "$ENV_FILE"
