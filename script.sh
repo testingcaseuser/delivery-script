@@ -455,7 +455,10 @@ docker swarm init >/dev/null 2>&1
 
 echo -e "11. Starting delivery service."
 
-export $(cat /data/delivery/source/.env) > /dev/null 2>&1; docker stack deploy delivery --compose-file=/data/delivery/source/compose.prod.yaml
+set -a
+source /data/delivery/source/.env
+set +a
+docker stack deploy delivery --compose-file=/data/delivery/source/compose.prod.yaml
 
 echo -e "\033[0;33m
    ____                            _         _       _   _                 _
