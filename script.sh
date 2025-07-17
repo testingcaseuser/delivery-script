@@ -453,9 +453,9 @@ echo -e "10. Enabling Docker Swarm mode."
 
 docker swarm init >/dev/null 2>&1
 
-echo -e "11. Starting delivery Docker containers."
+echo -e "11. Starting delivery service."
 
-docker compose --env-file /data/delivery/source/.env -f /data/delivery/source/compose.prod.yaml up -d --remove-orphans --force-recreate --wait --wait-timeout 60 >/dev/null 2>&1
+export $(cat /data/delivery/source/.env) > /dev/null 2>&1; docker stack deploy delivery --compose-file=/data/delivery/source/compose.prod.yaml
 
 echo -e "\033[0;33m
    ____                            _         _       _   _                 _
