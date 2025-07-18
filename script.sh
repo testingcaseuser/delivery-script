@@ -456,8 +456,7 @@ docker swarm init >/dev/null 2>&1
 echo -e "11. Starting delivery service."
 
 docker network create --driver overlay --attachable proxy
-docker compose -f /data/delivery/source/compose.prod.yaml --env-file /data/delivery/source/.env config > /data/delivery/source/docker-compose.yaml
-docker stack deploy delivery --compose-file=/data/delivery/source/docker-compose.yaml
+docker stack deploy -c <(docker compose -f /data/delivery/source/compose.prod.yaml --env-file /data/delivery/source/.env config) delivery
 
 echo -e "\033[0;33m
    ____                            _         _       _   _                 _
