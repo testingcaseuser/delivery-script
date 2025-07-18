@@ -455,6 +455,8 @@ docker swarm init >/dev/null 2>&1
 
 echo -e "11. Starting delivery service."
 
+docker network create --driver overlay --attachable proxy
+
 set -a
 source /data/delivery/source/.env
 set +a
