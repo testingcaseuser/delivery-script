@@ -360,7 +360,7 @@ curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/ma
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/infrastructure/traefik-config/traefik.yaml -o /data/delivery/source/infrastructure/traefik-config/traefik.yaml
 curl -fsSL https://raw.githubusercontent.com/younes101020/delivery/refs/heads/main/.env.production -o /data/delivery/source/.env.production
 
-chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json
+chmod 600 /data/delivery/source/infrastructure/traefik-config/acme.json || true
 
 echo -e "6. Make backup of .env to .env-$DATE"
 
