@@ -377,11 +377,6 @@ else
     sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASSWORD|" "$ENV_FILE"
     sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgres://productiondb:$DB_PASSWORD@tasks.delivery_database:5432/productiondb|" "$ENV_FILE"
 
-    # Generate secure Minio credentials
-    sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=$(openssl rand -hex 32)|" "$ENV_FILE"
-    sed -i "s|^MINIO_SERVER_SECRET_KEY=.*|MINIO_SERVER_SECRET_KEY=$(openssl rand -hex 32)|" "$ENV_FILE"
-    sed -i "s|^MINIO_SERVER_ACCESS_KEY=.*|MINIO_SERVER_ACCESS_KEY=$(openssl rand -hex 32)|" "$ENV_FILE"
-
     # Set the default host for ssh
     sed -i "s|^SSH_HOST=.*|SSH_HOST=$DEFAULT_PRIVATE_IP|" "$ENV_FILE"
 
