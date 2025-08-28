@@ -456,10 +456,7 @@ while true; do
     all_up=true
     
     for SERVICE in "${DELIVERY_SERVICES[@]}"; do
-        if docker service ps "$SERVICE" --filter "desired-state=running" | grep -q "Running"; then
-            echo "$(date): $SERVICE is UP"
-        else
-            echo "$(date): $SERVICE is DOWN"
+        if ! docker service ps "$SERVICE" --filter "desired-state=running" | grep -q "Running"; then
             all_up=false
         fi
     done
