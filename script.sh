@@ -7,6 +7,7 @@ set -e # Exit immediately if a command exits with a non-zero status
 set -o pipefail # Cause a pipeline to return the status of the last command that exited with a non-zero status
 DATE=$(date +"%Y%m%d-%H%M%S")
 
+
 VERSION="1.6"
 DOCKER_VERSION="27.0.3"
 CURRENT_USER=$USER
