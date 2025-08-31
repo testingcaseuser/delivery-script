@@ -108,6 +108,7 @@ if [ $EUID != 0 ]; then
     exit
 fi
 
+
 case "$OS_TYPE" in
 arch | ubuntu | debian | raspbian | centos | fedora | rhel | ol | rocky | sles | opensuse-leap | opensuse-tumbleweed | almalinux | amzn | alpine) ;;
 *)
